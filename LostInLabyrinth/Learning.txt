@@ -1,0 +1,18 @@
+﻿NDC = Normalized Device Coordinates
+	reichen von -1.0 - 1.0 auf Y und X Achse. Werte Ausserhalb dieser Angaben werden geklippt. 
+VBO = Vertex Buffer Objects
+	Speichert große Mengen Eckpunkte (Vertex) im Grafikspeicher
+VAO = Vertex Array Object
+	Speichert eine große Menge an VBO´s
+GLSL = OpenGL Shading Language
+	Sprache in der Shader in OpenGL erstellt werden
+Minimum zum Darstellen sind Vertex und Fragment Shader.
+Der vertex Shader stellt die Eckpunkte da (Triangle) während der Fragment Shader
+für die Farbinformationen zuständig ist. Texturen, Licht und andere Daten werden dort hinzugefügt.
+FPS = für Gamer
+SPF = Seconds per Frame (besser vor coder)
+EBO = Element Buffer Object
+	Speichert Informationen aus den vertices in Arrayobjekte. Statt 6 Vertices für ein Rechteck, brauche ich nur noch 4
+GLSL = OpenGL Shadersprache, ähnlich C
+
+
