@@ -1,0 +1,54 @@
+Wenn ich X und Y gegeben habe
+alpha = atan2(Y,X)
+
+habe ich den alpha, kann ich X und Y berechnen
+y = sin(alpha)
+X = cos(alpha)
+
+Berechnung Hypothenuse (Rechtwinkliges Dreieck)
+hypothenuse c^2 = a^2 + b^2 oder c = sqrt(a^2 + b^2)
+
+Berechnung Kathete
+c^2 = a^2 + b^2      | - b^2
+c^2 - b^2 = a^2
+sqrt(c^2 - b^2) = a
+
+
+
+Rotation Vektor x/y um beta
+
+alpha=atan2(y, x)
+alpha'=alpha+beta
+
+x'=cos(alpha')
+y'=sin(alpha')
+
+x'=cos(atan2(y, x) + beta)
+y'=sin(atan2(y, x) + beta)
+
+cos(a+b) = cos(a)*cos(b) - sin(a)*sin(b)
+sin(a+b) = cos(b)*sin(a) + cos(a)*sin(b)
+
+
+x'=cos(atan2(y, x))*cos(beta) - sin(atan2(y, x))*sin(beta)
+y'=cos(beta)*sin(atan2(y, x)) + cos(atan2(y, x))*sin(beta)
+
+cos(atan2(y,x)) = x / sqrt(x^2 + y^2)
+cos(atan2(y,x)) = x / 1
+cos(atan2(y,x)) = x
+
+x'=x*cos(beta) - sin(atan2(y, x))*sin(beta)
+y'=cos(beta)*sin(atan2(y, x)) + x*sin(beta)
+
+sin(atan2(y,x)) = y / sqrt(x^2 + y^2)
+sin(atan2(y,x)) = y / 1
+sin(atan2(y,x)) = y
+
+
+x'=x*cos(beta) - y*sin(beta)
+y'=cos(beta)*y + x*sin(beta)
+
+
+x'=x*cos(beta) - y*sin(beta)
+y'=x*sin(beta) + y*cos(beta)
+
