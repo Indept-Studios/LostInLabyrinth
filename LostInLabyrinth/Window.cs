@@ -21,19 +21,21 @@ namespace LIL
         private BufferHandle elementBufferObject;
         private Shader _shader;
         private Stopwatch _timer;
+        private Matrix4 _projection;
 
         private readonly float[] _vertices =
         {
           // positions        // colors
-          0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-         -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-          0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+          450f,  120f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+          150f,  120f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+          300f,  360f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
         };
 
         public Window(int width, int height, string title) :
             base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
             base.RenderFrequency = 60;
+            _projection = Matrix4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -72,6 +74,9 @@ namespace LIL
             _shader = new("Shader/shader.vert", "Shader/shader.frag");
             _shader.Use();
 
+            int projectionLoc = GL.GetUniformLocation(_shader.handle, "Projection");
+            GL.UniformMatrix4f(projectionLoc, false, _projection);
+
             Console.WriteLine("Game.OnLoad() done");
         }
 
@@ -81,11 +86,18 @@ namespace LIL
             GL.Clear(ClearBufferMask.ColorBufferBit);
             _shader.Use();
 
-            // code goes here
-            // solange nur ein shader, aufruf in OnLoad() besser da weniger performance nötig
+            int modelLoc = GL.GetUniformLocation(_shader.handle, "Model");
 
-            GL.BindVertexArray(_vertexArrayObject);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length);
+            List<Matrix4> matr = new List<Matrix4>();
+            matr.Add(Matrix4.CreateTranslation(-150, 0, 0));
+            matr.Add(Matrix4.CreateTranslation(150, 0, 0));
+
+            foreach (var item in matr)
+            {
+                GL.UniformMatrix4f(modelLoc, false, item);
+                GL.BindVertexArray(_vertexArrayObject);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length);
+            }
 
             SwapBuffers();
         }
