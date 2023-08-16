@@ -1,41 +1,33 @@
-﻿using LostInLabyrinth;
-using OpenTK.Graphics;
+﻿using Hommage;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Windows;
 
-namespace LIL
+namespace Hommage
 {
-    internal class Window : GameWindow
+    public class Window : GameWindow
     {
         //public 
 
         //private
-        private BufferHandle _vertexBufferObject;
-        private VertexArrayHandle _vertexArrayObject;
-        private BufferHandle elementBufferObject;
         private Shader _shader;
         private Stopwatch _timer;
         private Matrix4 _projection;
+        private Texture _texture;
+        private readonly Color4<Rgba> _backgroundColor;
 
-        private readonly float[] _vertices =
-        {
-          // positions        // colors
-          450f,  120f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-          150f,  120f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-          300f,  360f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
-        };
+        private Rectangle _rectangle;
+        private Rectangle _rectangle2;
 
         public Window(int width, int height, string title) :
             base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
             base.RenderFrequency = 60;
-            _projection = Matrix4.CreateOrthographicOffCenter(0, width, height, 0, -1, 1);
+            _backgroundColor = new Color4<Rgba>(0.5f, .5f, .5f, 1f);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -52,30 +44,27 @@ namespace LIL
         protected override void OnLoad()
         {
             base.OnLoad();
-            var backgroundColor = new Color4<Rgba>(0.2f, .3f, .3f, 1f);
-            GL.ClearColor(backgroundColor);
+
+            GL.ClearColor(_backgroundColor);
             _timer = new Stopwatch();
             _timer.Start();
 
-            //initialization code goes here
-            _vertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTargetARB.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTargetARB.ArrayBuffer, _vertices, BufferUsageARB.StaticDraw);
-
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
-
+            _texture = new Texture("Assets/Textures/tux.png");
 
             _shader = new("Shader/shader.vert", "Shader/shader.frag");
             _shader.Use();
 
-            int projectionLoc = GL.GetUniformLocation(_shader.handle, "Projection");
-            GL.UniformMatrix4f(projectionLoc, false, _projection);
+
+            _rectangle = new(_texture, 100, 100);
+            _rectangle.Color = Texture.CreateColor(110, 110, 110);
+
+            _rectangle2 = new Rectangle(Texture.WhitePixel, 50, 50);
+            _rectangle2.Position = new Vector3(350f, 350f, 0f);
+            _rectangle2.Color = Texture.CreateColor(0, 0, 238);
+
+
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             Console.WriteLine("Game.OnLoad() done");
         }
@@ -86,18 +75,9 @@ namespace LIL
             GL.Clear(ClearBufferMask.ColorBufferBit);
             _shader.Use();
 
-            int modelLoc = GL.GetUniformLocation(_shader.handle, "Model");
+            _rectangle.Draw(_shader);
 
-            List<Matrix4> matr = new List<Matrix4>();
-            matr.Add(Matrix4.CreateTranslation(-150, 0, 0));
-            matr.Add(Matrix4.CreateTranslation(150, 0, 0));
-
-            foreach (var item in matr)
-            {
-                GL.UniformMatrix4f(modelLoc, false, item);
-                GL.BindVertexArray(_vertexArrayObject);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, _vertices.Length);
-            }
+            _rectangle2.Draw(_shader);
 
             SwapBuffers();
         }
@@ -106,6 +86,11 @@ namespace LIL
         {
             base.OnResize(e);
             GL.Viewport(0, 0, e.Width, e.Height);
+            _projection = Matrix4.CreateOrthographicOffCenter(0, e.Width, e.Height, 0, -1, 1);
+
+            int projectionLoc = GL.GetUniformLocation(_shader.handle, "Projection");
+            GL.UniformMatrix4f(projectionLoc, false, _projection);
+            _rectangle2.Position.X = ClientSize.X - _rectangle2.Width;
         }
 
         protected override void OnUnload()

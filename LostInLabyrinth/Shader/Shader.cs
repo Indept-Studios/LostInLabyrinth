@@ -1,10 +1,12 @@
 ﻿using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
+using System;
+using System.IO;
 using System.Reflection.Metadata;
 
-namespace LostInLabyrinth
+namespace Hommage
 {
-    internal class Shader : IDisposable
+    public class Shader : IDisposable
     {
         //public
         public ProgramHandle handle { get; }

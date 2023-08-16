@@ -1,7 +1,4 @@
-﻿using System;
-using OpenTK;
-using OpenTK.Graphics;
-
+﻿
 namespace LIL
 {
     public class Programm
@@ -10,8 +7,7 @@ namespace LIL
 
         public static void Main(string[] args)
         {
-            using Window game = new Window(600, 480, title);
-            game.Run();
+            new Game();   
         }
     }
 }
