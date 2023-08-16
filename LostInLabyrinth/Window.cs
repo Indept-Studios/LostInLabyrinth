@@ -17,7 +17,6 @@ namespace Hommage
         private Shader _shader;
         private Stopwatch _timer;
         private Matrix4 _projection;
-        private Texture _texture;
         private readonly Color4<Rgba> _backgroundColor;
 
         private Rectangle _rectangle;
@@ -49,19 +48,9 @@ namespace Hommage
             _timer = new Stopwatch();
             _timer.Start();
 
-            _texture = new Texture("Assets/Textures/tux.png");
-
+            
             _shader = new("Shader/shader.vert", "Shader/shader.frag");
             _shader.Use();
-
-
-            _rectangle = new(_texture, 100, 100);
-            _rectangle.Color = Texture.CreateColor(110, 110, 110);
-
-            _rectangle2 = new Rectangle(Texture.WhitePixel, 50, 50);
-            _rectangle2.Position = new Vector3(350f, 350f, 0f);
-            _rectangle2.Color = Texture.CreateColor(0, 0, 238);
-
 
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
