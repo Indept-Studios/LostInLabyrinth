@@ -5,6 +5,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Hommage
@@ -19,14 +20,14 @@ namespace Hommage
         private Matrix4 _projection;
         private readonly Color4<Rgba> _backgroundColor;
 
-        private Rectangle _rectangle;
-        private Rectangle _rectangle2;
+        private List<Rectangle> _rectangles;
 
         public Window(int width, int height, string title) :
             base(GameWindowSettings.Default, new NativeWindowSettings() { Size = (width, height), Title = title })
         {
             base.RenderFrequency = 60;
             _backgroundColor = new Color4<Rgba>(0.5f, .5f, .5f, 1f);
+            _rectangles = new List<Rectangle>();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -64,9 +65,10 @@ namespace Hommage
             GL.Clear(ClearBufferMask.ColorBufferBit);
             _shader.Use();
 
-            _rectangle.Draw(_shader);
-
-            _rectangle2.Draw(_shader);
+            foreach (Rectangle rect in _rectangles)
+            {
+                rect.Draw(_shader);
+            }
 
             SwapBuffers();
         }
@@ -79,13 +81,23 @@ namespace Hommage
 
             int projectionLoc = GL.GetUniformLocation(_shader.handle, "Projection");
             GL.UniformMatrix4f(projectionLoc, false, _projection);
-            _rectangle2.Position.X = ClientSize.X - _rectangle2.Width;
+           
         }
 
         protected override void OnUnload()
         {
             base.OnUnload();
             _shader.Dispose();
+        }
+
+        public void AttachRectangel(Rectangle rectangle)
+        {
+            _rectangles.Add(rectangle);
+        }
+
+        public void DettachRectangel(Rectangle rectangle)
+        {
+            _rectangles.Remove(rectangle);
         }
     }
 }

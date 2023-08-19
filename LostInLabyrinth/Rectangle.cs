@@ -6,15 +6,15 @@ namespace Hommage
 {
     public class Rectangle
     {
+        //public 
         public float Width;
         public float Height;
-
         public Vector3 Position;
         public Color4<Rgba> Color;
 
+        //private
         private BufferHandle _vertexBufferObject;
         private VertexArrayHandle _vertexArrayObject;
-
         private Texture _texture;
 
         private readonly float[] _vertices =
