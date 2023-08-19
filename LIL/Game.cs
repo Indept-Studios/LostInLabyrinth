@@ -27,7 +27,7 @@ namespace LIL
             _rectangle = new(_texture, 100, 100);
             _rectangle.Color = Texture.CreateColor(110, 110, 110);
 
-             = new Rectangle(Texture.WhitePixel, 50, 50);
+            _rectangle2 = new Rectangle(Texture.WhitePixel, 50, 50);
             _rectangle2.Position = new Vector3(350f, 350f, 0f);
             _rectangle2.Color = Texture.CreateColor(0, 0, 238);
         }
